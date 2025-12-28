@@ -44,6 +44,17 @@ while True:
     head_x, head_y = snake[0]
     dx, dy = direction
     new_head = (head_x + dx, head_y + dy)
+    head_x, head_y = new_head
+
+    # Check for wall collisions
+    if head_x < 0 or head_x >= WIDTH or head_y < 0 or head_y >= HEIGHT:
+        pygame.quit()
+        sys.exit()
+    
+    # Check for self collisions
+    if new_head in snake:
+        pygame.quit()
+        sys.exit()
 
     snake.insert(0, new_head)
     if new_head == food:
