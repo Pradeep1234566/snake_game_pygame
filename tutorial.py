@@ -1,36 +1,54 @@
 import pygame
+import sys
 
 pygame.init()
 
-WIDTH, HEIGHT = 1000, 1000
+WIDTH, HEIGHT = 600, 600
+CELL_SIZE = 20
+
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("My First Pygame")
+pygame.display.set_caption("Snake")
 
 clock = pygame.time.Clock()
-running = True
 
-x, y = 100, 200
-speed = 5
-size = 40
+snake = [(100, 100), (80, 100), (60, 100)]
+direction = (CELL_SIZE, 0)
 
-while running:
-    clock.tick(60)
+while True:
+    clock.tick(10)
 
+    # -------- EVENTS --------
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            pygame.quit()
+            sys.exit()
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_a]: x -= speed
-    if keys[pygame.K_d]: x += speed
-    if keys[pygame.K_w]: y -= speed
-    if keys[pygame.K_s]: y += speed
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP and direction != (0, CELL_SIZE):
+                direction = (0, -CELL_SIZE)
+            elif event.key == pygame.K_DOWN and direction != (0, -CELL_SIZE):
+                direction = (0, CELL_SIZE)
+            elif event.key == pygame.K_LEFT and direction != (CELL_SIZE, 0):
+                direction = (-CELL_SIZE, 0)
+            elif event.key == pygame.K_RIGHT and direction != (-CELL_SIZE, 0):
+                direction = (CELL_SIZE, 0)
 
-    x = max(0, min(x, WIDTH - size))
-    y = max(0, min(y, HEIGHT - size))
+    # -------- UPDATE --------
+    head_x, head_y = snake[0]
+    dx, dy = direction
+    new_head = (head_x + dx, head_y + dy)
 
+    snake.insert(0, new_head)
+    snake.pop()
+
+    # -------- DRAW --------
     screen.fill((30, 30, 30))
-    pygame.draw.rect(screen, (0, 200, 255), (x, y, size, size))
-    pygame.display.flip()
 
-pygame.quit()
+    for block in snake:
+        pygame.draw.rect(
+            screen,
+            (0, 200, 0),
+            (block[0], block[1], CELL_SIZE, CELL_SIZE)
+        )
+
+    pygame.display.flip()
