@@ -4,6 +4,7 @@ import random
 
 
 pygame.init()
+font = pygame.font.SysFont(None, 36)
 
 WIDTH, HEIGHT = 600, 600
 CELL_SIZE = 20
@@ -19,6 +20,8 @@ food = (
     random.randrange(0, WIDTH, CELL_SIZE),
     random.randrange(0, HEIGHT, CELL_SIZE)
 )
+score = 0
+
 
 
 while True:
@@ -55,9 +58,12 @@ while True:
     if new_head in snake:
         pygame.quit()
         sys.exit()
+    
+
 
     snake.insert(0, new_head)
     if new_head == food:
+        score += 1
         food = (
             random.randrange(0, WIDTH, CELL_SIZE),
             random.randrange(0, HEIGHT, CELL_SIZE)
@@ -79,7 +85,8 @@ while True:
     screen,
     (200, 0, 0),
     (food[0], food[1], CELL_SIZE, CELL_SIZE)
-)
-
+    )
+    score_text = font.render(f"Score: {score}", True, (255, 255, 255))
+    screen.blit(score_text, (10, 10))
     pygame.display.flip()
     
