@@ -12,9 +12,16 @@ clock = pygame.time.Clock()
 BIRD_SIZE = 30
 bird_x = 80
 bird_y = HEIGHT // 2
-
+PIPE_WIDTH = 60
+PIPE_GAP = 150
+PIPE_SPEED = 3
 gravity = 0.5
 velocity = 0
+FLAP_STRENGTH = -8
+pipe_x = WIDTH
+pipe_gap_y = 200  # will randomize later
+pipe_x -= PIPE_SPEED
+# ---------- MAIN LOOP ----------
 
 while True:
     clock.tick(60)
@@ -24,11 +31,15 @@ while True:
             pygame.quit()
             sys.exit()
 
-    # Apply gravity
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                velocity = FLAP_STRENGTH
+
+    # Gravity
     velocity += gravity
     bird_y += velocity
 
-    # Keep bird inside screen
+    # Screen bounds
     if bird_y < 0:
         bird_y = 0
         velocity = 0
